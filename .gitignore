@@ -1,0 +1,17 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+## Env
+.env
+appsettings.Development.json
+
+## Migrations (opcional, some teams commit these)
+# src/*/Persistence/Migrations/
+
+## Logs
+logs/
+*.log
