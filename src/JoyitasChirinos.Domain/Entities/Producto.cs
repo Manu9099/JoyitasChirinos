@@ -21,6 +21,7 @@ public class Producto : AuditableEntity
     public Categoria? Categoria { get; private set; }
     public Proveedor? Proveedor { get; private set; }
     protected Producto() { }
+
     public static Producto Crear(string codigo, string nombre, TipoProducto tipo, MaterialProducto material,
         decimal precioCosto, decimal precioVenta, int stockInicial, Guid categoriaId,
         decimal? pesoGramos = null, Guid? proveedorId = null, int stockMinimo = 1)
@@ -37,6 +38,22 @@ public class Producto : AuditableEntity
             Peso = pesoGramos.HasValue ? new PesoGramos(pesoGramos.Value) : null
         };
     }
+
+    public void Actualizar(string nombre, TipoProducto tipo, MaterialProducto material,
+        decimal precioCosto, decimal precioVenta, int stockMinimo,
+        Guid categoriaId, Guid? proveedorId, decimal? pesoGramos, string? descripcion)
+    {
+        Nombre = nombre.Trim();
+        Tipo = tipo; Material = material;
+        PrecioCosto = new Dinero(precioCosto);
+        PrecioVenta = new Dinero(precioVenta);
+        StockMinimo = stockMinimo;
+        CategoriaId = categoriaId; ProveedorId = proveedorId;
+        Peso = pesoGramos.HasValue ? new PesoGramos(pesoGramos.Value) : null;
+        Descripcion = descripcion?.Trim();
+        Touch();
+    }
+
     public void AgregarStock(int cantidad)
     {
         if (cantidad <= 0) throw new ArgumentException("Cantidad debe ser positiva");
@@ -44,6 +61,7 @@ public class Producto : AuditableEntity
         if (Estado == EstadoProducto.Agotado) Estado = EstadoProducto.Activo;
         Touch();
     }
+
     public void RetirarStock(int cantidad)
     {
         if (cantidad <= 0) throw new ArgumentException("Cantidad debe ser positiva");
@@ -52,6 +70,7 @@ public class Producto : AuditableEntity
         if (StockActual == 0) Estado = EstadoProducto.Agotado;
         Touch();
     }
+
     public bool TieneBajoStock => StockActual <= StockMinimo;
     public void ActualizarFoto(string url) { FotoUrl = url; Touch(); }
 }
