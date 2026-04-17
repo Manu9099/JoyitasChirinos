@@ -21,7 +21,9 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, JwtTokenService>();
         services.AddScoped<IStorageService, CloudinaryStorageService>();
-          services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
+         services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
+         
+          
 
         return services;
     }

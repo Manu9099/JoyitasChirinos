@@ -7,13 +7,13 @@ public class Venta : BaseEntity
     public int Numero { get; private set; }
     public Guid? ClienteId { get; private set; }
     public Guid UsuarioId { get; private set; }
-    public Dinero Subtotal { get; private set; } = Dinero.Cero;
-    public Dinero Descuento { get; private set; } = Dinero.Cero;
-    public Dinero Total { get; private set; } = Dinero.Cero;
+    public decimal Subtotal { get; private set; } 
+    public decimal Descuento { get; private set; } 
+    public decimal Total { get; private set; } 
     public MetodoPago MetodoPago { get; private set; }
     public bool Anulada { get; private set; }
     public string? Notas { get; private set; }
-    public DateTime Fecha { get; private set; } = DateTime.UtcNow;
+    public DateTime Fecha { get; private set; } = DateTime.Now;
     private readonly List<VentaItem> _items = [];
     public IReadOnlyCollection<VentaItem> Items => _items.AsReadOnly();
     public Cliente? Cliente { get; private set; }
@@ -24,18 +24,18 @@ public class Venta : BaseEntity
     {
         if (Anulada) throw new InvalidOperationException("Venta anulada");
         producto.RetirarStock(cantidad);
-        _items.Add(VentaItem.Crear(Id, producto.Id, cantidad, producto.PrecioVenta.Monto));
+        _items.Add(VentaItem.Crear(Id, producto.Id, cantidad, producto.PrecioVenta));
         Recalcular();
     }
     public void AplicarDescuento(decimal monto)
     {
-        if (monto < 0 || monto > Subtotal.Monto) throw new ArgumentException("Descuento inválido");
-        Descuento = new Dinero(monto); Recalcular();
+        if (monto < 0 || monto > Subtotal) throw new ArgumentException("Descuento inválido");
+        Descuento = monto; Recalcular();
     }
     public void Anular() => Anulada = true;
     private void Recalcular()
     {
-        Subtotal = new Dinero(_items.Sum(i => i.Subtotal.Monto));
-        Total = new Dinero(Subtotal.Monto - Descuento.Monto);
+        Subtotal = _items.Sum(i => i.Subtotal);
+        Total = Subtotal - Descuento;
     }
 }

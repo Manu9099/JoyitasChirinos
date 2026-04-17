@@ -24,7 +24,7 @@ public class GetProductoByIdQueryHandler(IAppDbContext context)
             p.Id, p.Codigo, p.Nombre,
             p.Tipo.ToString(), p.Material.ToString(),
             p.Peso?.Valor,
-            p.PrecioCosto.Monto, p.PrecioVenta.Monto,
+            p.PrecioCosto, p.PrecioVenta,
             p.StockActual, p.StockMinimo, p.TieneBajoStock,
             p.FotoUrl, p.Descripcion, p.Estado.ToString(),
             p.CategoriaId, p.Categoria!.Nombre,

@@ -23,7 +23,7 @@ public class JwtTokenService(IConfiguration config) : ITokenService
             issuer: config["Jwt:Issuer"],
             audience: config["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(8),
+            expires: DateTime.Now.AddHours(8),
             signingCredentials: creds);
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

@@ -1,53 +1,112 @@
-using JoyitasChirinos.Domain.Common;
 using JoyitasChirinos.Domain.Enums;
-using JoyitasChirinos.Domain.ValueObjects;
+
 namespace JoyitasChirinos.Domain.Entities;
-public class Encargo : AuditableEntity
+
+public class Encargo
 {
+    public Guid Id { get; private set; }
     public int Numero { get; private set; }
+
     public Guid ClienteId { get; private set; }
     public Guid UsuarioId { get; private set; }
+
     public string Descripcion { get; private set; } = string.Empty;
     public MaterialProducto Material { get; private set; }
-    public PesoGramos? PesoEstimado { get; private set; }
-    public Dinero PrecioAcordado { get; private set; } = Dinero.Cero;
-    public Dinero Adelanto { get; private set; } = Dinero.Cero;
-    public Dinero SaldoPendiente => new(PrecioAcordado.Monto - Adelanto.Monto);
-    public EstadoEncargo Estado { get; private set; } = EstadoEncargo.Pendiente;
+
+    public decimal? PesoEstimado { get; private set; }
+    public decimal PrecioAcordado { get; private set; }
+    public decimal Adelanto { get; private set; }
+    public decimal SaldoPendiente => PrecioAcordado - Adelanto;
+
+    public EstadoEncargo Estado { get; private set; }
     public DateTime? FechaEntrega { get; private set; }
     public string? FotoReferenciaUrl { get; private set; }
     public string? Notas { get; private set; }
-    public Cliente? Cliente { get; private set; }
-    protected Encargo() { }
-    public static Encargo Crear(Guid clienteId, Guid usuarioId, string descripcion,
-        MaterialProducto material, decimal precioAcordado, decimal adelanto = 0,
-        DateTime? fechaEntrega = null, decimal? pesoEstimado = null)
+
+    public DateTime CreatedAt { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
+
+    public Cliente Cliente { get; private set; } = null!;
+    public Usuario Usuario { get; private set; } = null!;
+
+    private Encargo() { }
+
+    public Encargo(
+        Guid clienteId,
+        Guid usuarioId,
+        string descripcion,
+        MaterialProducto material,
+        decimal? pesoEstimado,
+        decimal precioAcordado,
+        decimal adelanto,
+        DateTime? fechaEntrega,
+        string? fotoReferenciaUrl,
+        string? notas)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(descripcion);
-        if (adelanto > precioAcordado) throw new ArgumentException("Adelanto supera el precio");
-        return new Encargo
-        {
-            ClienteId = clienteId, UsuarioId = usuarioId, Descripcion = descripcion.Trim(),
-            Material = material, PrecioAcordado = new Dinero(precioAcordado),
-            Adelanto = new Dinero(adelanto), FechaEntrega = fechaEntrega,
-            PesoEstimado = pesoEstimado.HasValue ? new PesoGramos(pesoEstimado.Value) : null
-        };
+        if (string.IsNullOrWhiteSpace(descripcion))
+            throw new ArgumentException("La descripción es obligatoria.");
+
+        if (precioAcordado < 0)
+            throw new ArgumentException("El precio acordado no puede ser negativo.");
+
+        if (adelanto < 0)
+            throw new ArgumentException("El adelanto no puede ser negativo.");
+
+        if (adelanto > precioAcordado)
+            throw new ArgumentException("El adelanto no puede ser mayor al precio acordado.");
+
+        Id = Guid.NewGuid();
+        ClienteId = clienteId;
+        UsuarioId = usuarioId;
+        Descripcion = descripcion.Trim();
+        Material = material;
+        PesoEstimado = pesoEstimado;
+        PrecioAcordado = precioAcordado;
+        Adelanto = adelanto;
+        FechaEntrega = fechaEntrega;
+        FotoReferenciaUrl = fotoReferenciaUrl;
+        Notas = notas;
+        Estado = EstadoEncargo.Pendiente;
+        CreatedAt = DateTime.Now;
+        UpdatedAt = DateTime.Now;
     }
-    public void AvanzarEstado()
+
+    public void Actualizar(
+        string descripcion,
+        MaterialProducto material,
+        decimal? pesoEstimado,
+        decimal precioAcordado,
+        decimal adelanto,
+        DateTime? fechaEntrega,
+        string? fotoReferenciaUrl,
+        string? notas)
     {
-        Estado = Estado switch
-        {
-            EstadoEncargo.Pendiente    => EstadoEncargo.EnProduccion,
-            EstadoEncargo.EnProduccion => EstadoEncargo.Listo,
-            EstadoEncargo.Listo        => EstadoEncargo.Entregado,
-            _ => throw new InvalidOperationException($"No se puede avanzar desde {Estado}")
-        };
-        Touch();
+        if (string.IsNullOrWhiteSpace(descripcion))
+            throw new ArgumentException("La descripción es obligatoria.");
+
+        if (precioAcordado < 0)
+            throw new ArgumentException("El precio acordado no puede ser negativo.");
+
+        if (adelanto < 0)
+            throw new ArgumentException("El adelanto no puede ser negativo.");
+
+        if (adelanto > precioAcordado)
+            throw new ArgumentException("El adelanto no puede ser mayor al precio acordado.");
+
+        Descripcion = descripcion.Trim();
+        Material = material;
+        PesoEstimado = pesoEstimado;
+        PrecioAcordado = precioAcordado;
+        Adelanto = adelanto;
+        FechaEntrega = fechaEntrega;
+        FotoReferenciaUrl = fotoReferenciaUrl;
+        Notas = notas;
+        UpdatedAt = DateTime.Now;
     }
-    public void RegistrarAdelanto(decimal monto)
+
+    public void CambiarEstado(EstadoEncargo estado)
     {
-        if (monto <= 0) throw new ArgumentException("Monto debe ser positivo");
-        if (Adelanto.Monto + monto > PrecioAcordado.Monto) throw new InvalidOperationException("Supera el precio acordado");
-        Adelanto = new Dinero(Adelanto.Monto + monto); Touch();
+        Estado = estado;
+        UpdatedAt = DateTime.Now;
     }
 }

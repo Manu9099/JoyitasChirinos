@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Serilog ──────────────────────────────────────────────────

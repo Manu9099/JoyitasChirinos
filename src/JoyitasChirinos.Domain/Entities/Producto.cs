@@ -9,8 +9,8 @@ public class Producto : AuditableEntity
     public TipoProducto Tipo { get; private set; }
     public MaterialProducto Material { get; private set; }
     public PesoGramos? Peso { get; private set; }
-    public Dinero PrecioCosto { get; private set; } = Dinero.Cero;
-    public Dinero PrecioVenta { get; private set; } = Dinero.Cero;
+    public decimal PrecioCosto { get; private set; } 
+    public decimal PrecioVenta { get; private set; } 
     public int StockActual { get; private set; }
     public int StockMinimo { get; private set; } = 1;
     public string? FotoUrl { get; private set; }
@@ -32,7 +32,7 @@ public class Producto : AuditableEntity
         {
             Codigo = codigo.ToUpper().Trim(), Nombre = nombre.Trim(),
             Tipo = tipo, Material = material,
-            PrecioCosto = new Dinero(precioCosto), PrecioVenta = new Dinero(precioVenta),
+            PrecioCosto = precioCosto, PrecioVenta = precioVenta,
             StockActual = stockInicial, StockMinimo = stockMinimo,
             CategoriaId = categoriaId, ProveedorId = proveedorId,
             Peso = pesoGramos.HasValue ? new PesoGramos(pesoGramos.Value) : null
@@ -45,8 +45,8 @@ public class Producto : AuditableEntity
     {
         Nombre = nombre.Trim();
         Tipo = tipo; Material = material;
-        PrecioCosto = new Dinero(precioCosto);
-        PrecioVenta = new Dinero(precioVenta);
+        PrecioCosto = precioCosto;
+        PrecioVenta = precioVenta;
         StockMinimo = stockMinimo;
         CategoriaId = categoriaId; ProveedorId = proveedorId;
         Peso = pesoGramos.HasValue ? new PesoGramos(pesoGramos.Value) : null;

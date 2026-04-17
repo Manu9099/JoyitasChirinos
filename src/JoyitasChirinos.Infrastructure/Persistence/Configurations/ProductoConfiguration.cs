@@ -18,14 +18,16 @@ public class ProductoConfiguration : IEntityTypeConfiguration<Producto>
         b.OwnsOne(x => x.Peso, peso => {
             peso.Property(p => p.Valor).HasColumnName("peso_gramos").HasColumnType("numeric(8,3)");
         });
-        b.OwnsOne(x => x.PrecioCosto, d => {
-            d.Property(p => p.Monto).HasColumnName("precio_costo").HasColumnType("numeric(10,2)");
-            d.Ignore(p => p.Moneda);
-        });
-        b.OwnsOne(x => x.PrecioVenta, d => {
-            d.Property(p => p.Monto).HasColumnName("precio_venta").HasColumnType("numeric(10,2)");
-            d.Ignore(p => p.Moneda);
-        });
+
+      b.Property(x => x.PrecioCosto)
+    .HasColumnName("precio_costo")
+    .HasColumnType("numeric(10,2)")
+    .IsRequired();
+
+b.Property(x => x.PrecioVenta)
+    .HasColumnName("precio_venta")
+    .HasColumnType("numeric(10,2)")
+    .IsRequired();
         b.Property(x => x.StockActual).HasColumnName("stock_actual");
         b.Property(x => x.StockMinimo).HasColumnName("stock_minimo");
         b.Property(x => x.FotoUrl).HasColumnName("foto_url");
@@ -33,8 +35,13 @@ public class ProductoConfiguration : IEntityTypeConfiguration<Producto>
         b.Property(x => x.Estado).HasColumnName("estado").HasConversion<string>();
         b.Property(x => x.CategoriaId).HasColumnName("categoria_id");
         b.Property(x => x.ProveedorId).HasColumnName("proveedor_id");
-        b.Property(x => x.CreatedAt).HasColumnName("created_at");
-        b.Property(x => x.UpdatedAt).HasColumnName("updated_at");
+        b.Property(x => x.CreatedAt)
+        .HasColumnName("created_at")
+        .HasColumnType("timestamp without time zone");
+
+        b.Property(x => x.UpdatedAt)
+            .HasColumnName("updated_at")
+            .HasColumnType("timestamp without time zone");
         b.HasOne(x => x.Categoria).WithMany(c => c.Productos).HasForeignKey(x => x.CategoriaId);
         b.HasOne(x => x.Proveedor).WithMany().HasForeignKey(x => x.ProveedorId);
     }

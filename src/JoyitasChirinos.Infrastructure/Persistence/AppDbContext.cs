@@ -19,8 +19,13 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Usuario> Usuarios => Set<Usuario>();
 
 
-    protected override void OnModelCreating(ModelBuilder mb)
-        => mb.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+    modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+}
+        
+        
         
 
 }

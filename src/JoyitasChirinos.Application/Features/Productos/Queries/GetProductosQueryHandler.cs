@@ -37,7 +37,7 @@ public class GetProductosQueryHandler(IAppDbContext context)
             .Select(p => new ProductoResumenDto(
                 p.Id, p.Codigo, p.Nombre,
                 p.Tipo.ToString(), p.Material.ToString(),
-                p.PrecioVenta.Monto, p.StockActual,
+                p.PrecioVenta, p.StockActual,
                 p.FotoUrl, p.Estado.ToString()))
             .ToListAsync(ct);
 
