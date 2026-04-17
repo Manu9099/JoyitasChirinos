@@ -10,16 +10,32 @@ public class Venta : BaseEntity
     public decimal Subtotal { get; private set; } 
     public decimal Descuento { get; private set; } 
     public decimal Total { get; private set; } 
-    public MetodoPago MetodoPago { get; private set; }
+    public string MetodoPago { get; private set; } ="efectivo";
     public bool Anulada { get; private set; }
+    public string Estado { get; private set; } = "completada";
     public string? Notas { get; private set; }
     public DateTime Fecha { get; private set; } = DateTime.Now;
     private readonly List<VentaItem> _items = [];
     public IReadOnlyCollection<VentaItem> Items => _items.AsReadOnly();
     public Cliente? Cliente { get; private set; }
     protected Venta() { }
-    public static Venta Crear(Guid usuarioId, MetodoPago metodoPago, Guid? clienteId = null, string? notas = null)
+   public Venta(Guid usuarioId, Guid? clienteId = null, string metodoPago = "efectivo", string? notas = null)
+{
+    Id = Guid.NewGuid();
+    UsuarioId = usuarioId;
+    ClienteId = clienteId;
+    MetodoPago = metodoPago;
+    Notas = notas;
+    Fecha = DateTime.Now;
+    Estado = "completada";
+    Subtotal = 0m;
+    Descuento = 0m;
+    Total = 0m;
+}
+
+    public static Venta Crear(Guid usuarioId, string metodoPago, Guid? clienteId = null, string? notas = null)
         => new() { UsuarioId = usuarioId, MetodoPago = metodoPago, ClienteId = clienteId, Notas = notas };
+
     public void AgregarItem(Producto producto, int cantidad)
     {
         if (Anulada) throw new InvalidOperationException("Venta anulada");
