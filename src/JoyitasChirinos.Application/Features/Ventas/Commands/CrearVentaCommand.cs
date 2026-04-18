@@ -4,6 +4,7 @@ using MediatR;
 namespace JoyitasChirinos.Application.Features.Ventas.Commands;
 
 public record CrearVentaCommand(
+    Guid UsuarioId,
     Guid? ClienteId,
     decimal Descuento,
     string MetodoPago,

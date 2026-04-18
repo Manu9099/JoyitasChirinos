@@ -19,12 +19,12 @@ public class CrearVentaCommandHandler : IRequestHandler<CrearVentaCommand, Guid>
         if (request.Items is null || request.Items.Count == 0)
             throw new ArgumentException("La venta debe tener al menos un item.");
 
-        var venta = new Venta(
-            usuarioId: Guid.Parse("11111111-1111-1111-1111-111111111111"), // temporal
-            clienteId: request.ClienteId,
-            metodoPago: request.MetodoPago,
-            notas: request.Notas
-        );
+   var venta = new Venta(
+    usuarioId: request.UsuarioId,
+    clienteId: request.ClienteId,
+    metodoPago: request.MetodoPago,
+    notas: request.Notas
+);
 
         foreach (var item in request.Items)
         {
