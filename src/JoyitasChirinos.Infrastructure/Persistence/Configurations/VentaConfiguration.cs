@@ -41,15 +41,9 @@ public class VentaConfiguration : IEntityTypeConfiguration<Venta>
             .HasMaxLength(20)
             .IsRequired();
 
-        b.Property(x => x.Notas)
-            .HasColumnName("notas");
-
-        b.Property(x => x.Numero)
-            .HasColumnName("numero");
-
-          b.Property(x => x.Anulada)
-           .HasColumnName("anulada");
-           b.Ignore(x => x.Anulada);
+        b.Property(x => x.Notas).HasColumnName("notas");
+        b.Property(x => x.Numero).HasColumnName("numero");
+        b.Property(x => x.Anulada).HasColumnName("anulada");
 
         b.Property(x => x.CreatedAt)
             .HasColumnName("created_at")
@@ -58,6 +52,11 @@ public class VentaConfiguration : IEntityTypeConfiguration<Venta>
         b.Property(x => x.Fecha)
             .HasColumnName("fecha")
             .HasColumnType("timestamp without time zone");
+
+        b.HasOne(x => x.Cliente)
+            .WithMany()
+            .HasForeignKey(x => x.ClienteId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         b.HasMany(x => x.Items)
             .WithOne()

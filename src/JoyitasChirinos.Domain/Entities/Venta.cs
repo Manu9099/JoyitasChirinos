@@ -48,7 +48,11 @@ public class Venta : BaseEntity
         if (monto < 0 || monto > Subtotal) throw new ArgumentException("Descuento inválido");
         Descuento = monto; Recalcular();
     }
-    public void Anular() => Anulada = true;
+    public void Anular()
+    {
+        Anulada = true;
+        Estado = "anulada";
+    }
     private void Recalcular()
     {
         Subtotal = _items.Sum(i => i.Subtotal);
