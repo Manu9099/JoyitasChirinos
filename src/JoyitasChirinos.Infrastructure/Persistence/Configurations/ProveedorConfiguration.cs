@@ -19,6 +19,7 @@ public class ProveedorConfiguration : IEntityTypeConfiguration<Proveedor>
         b.Property(x => x.Tipo).HasColumnName("tipo").HasMaxLength(40).IsRequired();
         b.Property(x => x.Notas).HasColumnName("notas");
         b.Property(x => x.Activo).HasColumnName("activo").IsRequired();
-        b.Property(x => x.CreatedAt).HasColumnName("created_at").IsRequired();
+        b.Property(x => x.CreatedAt).HasColumnName("created_at")
+        .HasColumnType("timestamp without time zone").IsRequired();
     }
 }

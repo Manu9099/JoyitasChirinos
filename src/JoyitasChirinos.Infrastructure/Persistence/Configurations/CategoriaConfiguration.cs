@@ -13,6 +13,7 @@ public class CategoriaConfiguration : IEntityTypeConfiguration<Categoria>
         b.HasKey(x => x.Id);
 
         b.Property(x => x.Id).HasColumnName("id");
+
         b.Property(x => x.Nombre)
             .HasColumnName("nombre")
             .HasMaxLength(80)
@@ -23,6 +24,7 @@ public class CategoriaConfiguration : IEntityTypeConfiguration<Categoria>
 
         b.Property(x => x.CreatedAt)
             .HasColumnName("created_at")
+            .HasColumnType("timestamp without time zone")
             .IsRequired();
 
         b.HasIndex(x => x.Nombre).IsUnique();
