@@ -12,5 +12,6 @@ public interface IAppDbContext
 
     DbSet<Venta> Ventas { get; }
     DbSet<VentaItem> VentaItems { get; }
+    DbSet<Encargo> Encargos { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

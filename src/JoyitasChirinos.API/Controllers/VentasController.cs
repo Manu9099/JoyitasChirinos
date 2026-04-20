@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using JoyitasChirinos.Application.Features.Ventas.Commands;
 using JoyitasChirinos.Application.Features.Ventas.DTOs;
+using JoyitasChirinos.Application.Features.Ventas.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,32 @@ public class VentasController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetVentas(
+        [FromQuery] DateTime? desde,
+        [FromQuery] DateTime? hasta,
+        [FromQuery] Guid? clienteId,
+        [FromQuery] string? metodoPago,
+        [FromQuery] bool? anulada,
+        [FromQuery] int pagina = 1,
+        [FromQuery] int tamanoPagina = 20,
+        CancellationToken ct = default)
+    {
+        var result = await _mediator.Send(
+            new GetVentasQuery(desde, hasta, clienteId, metodoPago, anulada, pagina, tamanoPagina), ct);
+
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetVenta(Guid id, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetVentaByIdQuery(id), ct);
+        return Ok(result);
+    }
+
     [HttpPost]
+    [Authorize(Roles = "Admin,Vendedor")]
     public async Task<IActionResult> Crear([FromBody] CrearVentaDto dto, CancellationToken ct)
     {
         var userIdValue =
@@ -40,6 +66,14 @@ public class VentasController : ControllerBase
         );
 
         var ventaId = await _mediator.Send(command, ct);
-        return Ok(new { id = ventaId, mensaje = "Venta registrada correctamente" });
+        return CreatedAtAction(nameof(GetVenta), new { id = ventaId }, new { id = ventaId });
+    }
+
+    [HttpPatch("{id:guid}/anular")]
+    [Authorize(Roles = "Admin,Vendedor")]
+    public async Task<IActionResult> Anular(Guid id, CancellationToken ct)
+    {
+        await _mediator.Send(new AnularVentaCommand(id), ct);
+        return NoContent();
     }
 }

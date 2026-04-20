@@ -32,6 +32,7 @@ public class Encargo
     private Encargo() { }
 
     public Encargo(
+        int numero,
         Guid clienteId,
         Guid usuarioId,
         string descripcion,
@@ -61,6 +62,7 @@ public class Encargo
         Descripcion = descripcion.Trim();
         Material = material;
         PesoEstimado = pesoEstimado;
+        Numero = numero;
         PrecioAcordado = precioAcordado;
         Adelanto = adelanto;
         FechaEntrega = fechaEntrega;

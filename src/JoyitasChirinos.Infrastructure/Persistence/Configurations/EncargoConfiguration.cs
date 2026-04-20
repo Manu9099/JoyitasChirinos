@@ -28,19 +28,26 @@ b.Property(x => x.PrecioAcordado)
     .HasColumnType("numeric(10,2)")
     .IsRequired();
 
-b.Property(x => x.Adelanto)
-    .HasColumnName("adelanto")
-    .HasColumnType("numeric(10,2)")
-    .IsRequired();
+        b.Property(x => x.Adelanto)
+        .HasColumnName("adelanto")
+        .HasColumnType("numeric(10,2)")
+        .IsRequired();
 
         b.Property(x => x.Estado).HasColumnName("estado").HasConversion<string>().IsRequired();
-        b.Property(x => x.FechaEntrega).HasColumnName("fecha_entrega");
+        b.Property(x => x.FechaEntrega)
+        .HasColumnName("fecha_entrega")
+        .HasColumnType("timestamp without time zone");
         b.Property(x => x.FotoReferenciaUrl).HasColumnName("foto_referencia_url");
         b.Property(x => x.Notas).HasColumnName("notas");
-        b.Property(x => x.CreatedAt).HasColumnName("created_at");
-        b.Property(x => x.UpdatedAt).HasColumnName("updated_at");
+        b.Property(x => x.CreatedAt)
+         .HasColumnName("created_at")
+        .HasColumnType("timestamp without time zone");
+
+        b.Property(x => x.UpdatedAt)
+        .HasColumnName("updated_at")
+        .HasColumnType("timestamp without time zone");
 
         b.HasOne(x => x.Cliente).WithMany().HasForeignKey(x => x.ClienteId);
-     //   b.HasOne(x => x.Usuario).WithMany().HasForeignKey(x => x.UsuarioId);
+      b.HasOne(x => x.Usuario).WithMany().HasForeignKey(x => x.UsuarioId);
     }
 }
