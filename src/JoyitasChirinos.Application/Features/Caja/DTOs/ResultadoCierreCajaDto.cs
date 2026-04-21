@@ -1,0 +1,2 @@
+namespace JoyitasChirinos.Application.Features.Caja.DTOs;
+public record ResultadoCierreCajaDto(Guid Id, DateTime FechaApertura, DateTime FechaCierre, decimal MontoInicial, decimal VentasEfectivo, decimal VentasYape, decimal VentasPlin, decimal VentasTarjeta, decimal VentasTransferencia, decimal VentasOtros, decimal TotalVentasGeneral, decimal TotalIngresosManuales, decimal TotalEgresosManuales, decimal MontoEsperado, decimal MontoFinalContado, decimal Diferencia, string EstadoCaja, string Mensaje);

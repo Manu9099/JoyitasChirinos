@@ -1,11 +1,2 @@
 namespace JoyitasChirinos.Application.Features.Caja.DTOs;
-
-public record CajaActualDto(
-    Guid Id,
-    Guid UsuarioId,
-    DateTime FechaApertura,
-    decimal MontoInicial,
-    bool Abierta,
-    string? ObservacionesApertura,
-    decimal TotalVentas
-);
+public record CajaActualDto(Guid Id, Guid UsuarioAperturaId, DateTime FechaApertura, decimal MontoInicial, bool Abierta, string? ObservacionesApertura, decimal VentasEfectivo, decimal VentasYape, decimal VentasPlin, decimal VentasTarjeta, decimal VentasTransferencia, decimal VentasOtros, decimal TotalVentasGeneral, decimal TotalIngresosManuales, decimal TotalEgresosManuales, decimal MontoEsperado, IReadOnlyList<CajaMovimientoDto> Movimientos);

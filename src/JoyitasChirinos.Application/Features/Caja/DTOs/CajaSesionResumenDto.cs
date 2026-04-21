@@ -1,0 +1,2 @@
+namespace JoyitasChirinos.Application.Features.Caja.DTOs;
+public record CajaSesionResumenDto(Guid Id, DateTime FechaApertura, DateTime? FechaCierre, Guid UsuarioAperturaId, Guid? UsuarioCierreId, decimal MontoInicial, decimal? MontoFinalContado, decimal? MontoEsperadoCierre, decimal? DiferenciaCierre, string? EstadoCierre, bool Abierta);

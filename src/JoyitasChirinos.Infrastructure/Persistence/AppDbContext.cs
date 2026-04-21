@@ -18,7 +18,8 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Encargo> Encargos => Set<Encargo>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
  public DbSet<CajaSesion> CajaSesiones => Set<CajaSesion>();
-
+ 
+  public DbSet<CajaMovimiento> CajaMovimientos => Set<CajaMovimiento>();
   protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     base.OnModelCreating(modelBuilder);

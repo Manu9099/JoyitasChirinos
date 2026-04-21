@@ -5,32 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JoyitasChirinos.Application.Features.Caja.Commands;
 
-public class AbrirCajaCommandHandler : IRequestHandler<AbrirCajaCommand, Guid>
+public class AbrirCajaCommandHandler : IRequestHandler<AbrirCajaCommand, Guid> 
 {
     private readonly IAppDbContext _context;
+    public AbrirCajaCommandHandler(IAppDbContext context) => _context = context;
 
-    public AbrirCajaCommandHandler(IAppDbContext context)
+    public async Task<Guid> Handle(AbrirCajaCommand request, CancellationToken ct) 
     {
-        _context = context;
-    }
+        var hayCajaAbierta = await _context.CajaSesiones.AnyAsync(x => x.Abierta, ct);
+        if (hayCajaAbierta) throw new InvalidOperationException("Ya existe una caja abierta.");
 
-    public async Task<Guid> Handle(AbrirCajaCommand request, CancellationToken ct)
-    {
-        var yaExisteAbierta = await _context.CajaSesiones
-            .AnyAsync(x => x.Abierta, ct);
-
-        if (yaExisteAbierta)
-            throw new InvalidOperationException("Ya existe una caja abierta.");
-
-        var caja = new CajaSesion(
-            request.UsuarioId,
-            request.Datos.MontoInicial,
-            request.Datos.Observaciones
-        );
-
+        var caja = new CajaSesion(request.UsuarioId, request.Datos.MontoInicial, request.Datos.Observaciones);
         _context.CajaSesiones.Add(caja);
         await _context.SaveChangesAsync(ct);
-
         return caja.Id;
     }
 }
