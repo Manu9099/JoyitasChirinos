@@ -17,7 +17,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<VentaItem> VentaItems => Set<VentaItem>();
     public DbSet<Encargo> Encargos => Set<Encargo>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
-
+ public DbSet<CajaSesion> CajaSesiones => Set<CajaSesion>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
